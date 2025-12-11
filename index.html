@@ -1678,6 +1678,7 @@ setTimeout(() => {
     });
 
     reset.addEventListener("click", () => {
+        flag = 0;
         markerA.setPosition(null);
         markerB.setPosition(null);
     })
@@ -1697,6 +1698,7 @@ setTimeout(() => {
     });
 
     clearBtn.addEventListener("click", (e) => {
+        flag = 0
         e.stopPropagation();
 
         // Xoá đường
