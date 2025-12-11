@@ -27,8 +27,8 @@
     });
 
 var hangBoCoordinates = [
-  { lat: 20.96552, lng: 105.84192 },
-  { lat: 20.96073, lng: 105.84221 },
+  { lat: 20.96572, lng: 105.84192 },
+  { lat: 20.96073, lng: 105.84201 },
   { lat: 20.95524, lng: 105.84324 },
   { lat: 20.95003, lng: 105.84421 },
   { lat: 20.95156, lng: 105.84742 },
@@ -53,13 +53,14 @@ var hangBoCoordinates = [
   { lat: 20.96319, lng: 105.87500 },
   { lat: 20.96445, lng: 105.87600 },
   { lat: 20.96497, lng: 105.87670 },
-  { lat: 20.96522, lng: 105.87499 },
+  { lat: 20.96542, lng: 105.87499 },
   { lat: 20.96424, lng: 105.87202 },
   { lat: 20.96375, lng: 105.86477 },
-  { lat: 20.96478, lng: 105.85493 },
+  { lat: 20.96500, lng: 105.85493 },
+  { lat: 20.965665, lng: 105.848872 },
 ];
 
-
+//20.965665, 105.848872
     var hangBoArea = new google.maps.Polygon({
     paths: hangBoCoordinates,
     strokeOpacity: 0,
@@ -615,108 +616,431 @@ new google.maps.LatLng(20.9636, 105.86835),
     // adj[intersections[0].toString()].push(intersections[1], intersections[6], intersections[16]);
     
     function addEdge(i, j) {
-        adj[intersections[i - 1].toString()].push(intersections[j - 1]);
+        adj[intersections[i].toString()].push(intersections[j]);
+        adj[intersections[j].toString()].push(intersections[i]);
     }
 
-    addEdge(1, 175);
-    addEdge(1, 2);
+    function addEdge2(i, j) {
+        i--;
+        j--;
+        adj[intersections[i].toString()].push(intersections[j]);
+        adj[intersections[j].toString()].push(intersections[i]);
+    }
+addEdge(18,19);
+addEdge(19,26);
+addEdge(19,20);
+addEdge(20,25);
+addEdge(20,21);
+addEdge(21,22);
+addEdge(22,23);
+addEdge(23,24);
+addEdge(26,27);
+addEdge(27,28);
+addEdge(28,29);
+addEdge(10,29);
+addEdge(28,30);
+addEdge(30,31);
+addEdge(30,47);
+addEdge(47,48);
+addEdge(48,49);
+addEdge(49,50);
+addEdge(49,445);
+addEdge(50,51);
+addEdge(51,445);
+addEdge(50,59);
+addEdge(48,59);
+addEdge(59,60);
+addEdge(51,52);
+addEdge(52,53);
+addEdge(53,54);
+addEdge(55,56);
+addEdge(56,57);
+addEdge(54,141);
+addEdge(58,141);
+addEdge(58,61);
+addEdge(53,60);
+addEdge(60,61);
+addEdge(61,62);
+addEdge(62,64);
+addEdge(33,47);
+addEdge(33,34);
+addEdge(32,33);
+addEdge(34,35);
+addEdge(31,32);
+addEdge(35,36);
+addEdge(36,37);
+addEdge(37,422);
+addEdge(36,39);
+addEdge(37,38);
+addEdge(38,41);
+addEdge(39,40);
+addEdge(35,40);
+addEdge(34,63);
+addEdge(41,42);
+addEdge(42,92);
+addEdge(42,95);
+addEdge(92,93);
+addEdge(43,92);
+addEdge(43,44);
+addEdge(93,94);
+addEdge(75,94);
+addEdge(45,75);
+addEdge(85,95);
+addEdge(63,85);
+addEdge(63,64);
+addEdge(64,130);
+addEdge(130,131);
+addEdge(131,134);
+addEdge(134,135);
+addEdge(135,144);
+addEdge(144,146);
+addEdge(146,233);
+addEdge(63,124);
+addEdge(123,124);
+addEdge(124,125);
+addEdge(125,126);
+addEdge(126,129);
+addEdge(129,130);
+addEdge(131,132);
+addEdge(132,133);
+addEdge(122,133);
+addEdge(121,122);
+addEdge(133,136);
+addEdge(86,121);
+addEdge(84,86);
+addEdge(76,84);
+addEdge(76,78);
+addEdge(73,78);
+addEdge(71,73);
+addEdge(68,71);
+addEdge(68,69);
+addEdge(69,70);
+addEdge(70,72);
+addEdge(70,71);
+addEdge(72,73);
+addEdge(72,74);
+addEdge(74,76);
+addEdge(77,93);
+addEdge(77,79);
+addEdge(79,80);
+addEdge(80,82);
+addEdge(82,128);
+addEdge(127,128);
+addEdge(87,127);
+addEdge(87,123);
+addEdge(44,45);
+addEdge(45,65);
+addEdge(65,66);
+addEdge(65,67);
+addEdge(67,100);
+addEdge(100,101);
+addEdge(101,106);
+addEdge(101,102);
+addEdge(102,103);
+addEdge(103,104);
+addEdge(104,105);
+addEdge(102,105);
+addEdge(105,106);
+addEdge(106,107);
+addEdge(107,108);
+addEdge(107,152);
+addEdge(108,109);
+addEdge(109,140);
+addEdge(113,140);
+addEdge(113,114);
+addEdge(114,115);
+addEdge(110,111);
+addEdge(110,112);
+addEdge(139,140);
+addEdge(151,152);
+addEdge(150,151);
+addEdge(148,150);
+addEdge(148,181);
+addEdge(148,149);
+addEdge(180,181);
+addEdge(180,182);
+addEdge(182,183);
+addEdge(183,184);
+addEdge(184,185);
+addEdge(185,203);
+addEdge(203,217);
+addEdge(217,218);
+addEdge(218,219);
+addEdge(219,233);
+addEdge(137,182);
+addEdge(137,138);
+addEdge(138,139);
+addEdge(137,204);
+addEdge(204,205);
+addEdge(205,206);
+addEdge(203,206);
+addEdge(217,220);
+addEdge(220,221);
+addEdge(221,222);
+addEdge(222,224);
+addEdge(223,224);
+addEdge(223,225);
+addEdge(225,226);
+addEdge(226,227);
+addEdge(225,228);
+addEdge(227,229);
+addEdge(228,229);
+addEdge(228,238);
+addEdge(229,230);
+addEdge(230,231);
+addEdge(231,232);
+addEdge(145,230);
+addEdge(115,238);
+addEdge(115,116);
+addEdge(116,117);
+addEdge(117,118);
+addEdge(118,145);
+addEdge(145,147);
+addEdge(146,147);
+addEdge(142,145);
+addEdge(142,143);
+addEdge(136,142);
+addEdge(135,136);
+addEdge(118,120);
+addEdge(117,119);
+addEdge(119,120);
+addEdge(120,122);
+addEdge(119,121);
+addEdge(68,99);
+addEdge(98,99);
+addEdge(97,98);
+addEdge(96,97);
+addEdge(91,96);
+addEdge(90,91);
+addEdge(89,90);
+addEdge(88,89);
+addEdge(83,88);
+addEdge(81,83);
+addEdge(86,88);
+addEdge(83,84);
+addEdge(81,91);
+addEdge(78,81);
+addEdge(18,46);
+addEdge(21,24);
+addEdge(38,39);
+addEdge(44,46);
+addEdge(52,55);
+addEdge(54,55);
+addEdge(57,58);
+addEdge(67,68);
+addEdge(82,95);
+addEdge(85,87);
+addEdge(86,127);
+addEdge(108,111);
+addEdge(109,110);
+addEdge(121,123);
+addEdge(122,126);
+addEdge(206,238);
+addEdge(220,226);
+addEdge(219,227);
 
-    addEdge(2, 1);
-    addEdge(2, 177);
-    addEdge(2, 17);
 
-    addEdge(3, 249);
-    addEdge(3, 248);
-   
-    addEdge(4, 435);
-    addEdge(4, 261);
 
-    addEdge(5, 263);
-    addEdge(5, 264);
-    addEdge(5, 457);
+    addEdge2(12, 362);
+    addEdge2(12, 318);
+    addEdge2(12, 466);
 
-    addEdge(6, 265);
-    addEdge(6, 266);
+    addEdge2(362, 363);
+    addEdge2(363, 386);
+    addEdge2(386, 387);
 
-    addEdge(7, 313);
-    addEdge(7, 312);
+    addEdge2(318, 323);
+    addEdge2(318, 319);
 
-    addEdge(8, 401);
-    addEdge(8, 463);
+    addEdge2(323, 324);
+    addEdge2(324, 320);
+    addEdge2(320, 321);
+    addEdge2(321, 319);
 
-    addEdge(9, 393);
-    addEdge(9, 462);
-   
-    addEdge(10, 393);
-    addEdge(10, 394);
+    addEdge2(320, 322);
+    addEdge2(320, 326);
+    addEdge2(326, 328);
+    addEdge2(328, 325);
+    addEdge2(322, 325);
 
-    addEdge(11, 18);
-    addEdge(11, 30);
+    addEdge2(326, 330);
+    addEdge2(330, 329);
+    addEdge2(329, 327);
+    addEdge2(327, 325);
+    addEdge2(329, 328);
 
-    addEdge(12, 362);
-    addEdge(12, 318);
-    addEdge(12, 466);
+    addEdge2(330, 333);
+    addEdge2(333, 332);
+    addEdge2(332, 331);
+    addEdge2(331, 327);
+    addEdge2(332, 329);
 
-    addEdge(13, 315);
-    addEdge(13, 394);
-    addEdge(13, 387);
+    addEdge2(333, 335);
+    addEdge2(335, 334);
+    addEdge2(334, 331);
 
-    addEdge(14, 466);
-    addEdge(14, 18);
+    addEdge2(321, 344);
+    addEdge2(344, 346);
+    addEdge2(346, 345);
+    addEdge2(345, 319);
 
-    addEdge(15, 461);
-    addEdge(15, 314);
-    addEdge(15, 462);
+    addEdge2(330, 343);
+    addEdge2(344, 343);
+    addEdge2(343, 347);
+    addEdge2(347, 348);
+    addEdge2(348, 345);
 
-    addEdge(16, 248);
-    addEdge(16, 435);
+    addEdge2(343, 341);
+    addEdge2(348, 349);
+    addEdge2(335, 339);
+    addEdge2(339, 341);
+    addEdge2(341, 350);
+    addEdge2(350, 349);
 
-    addEdge(17, 2);
-    addEdge(17, 249);
+    addEdge2(334, 336);
+    addEdge2(335, 338);
+    addEdge2(339, 340);
+    addEdge2(341, 342);
+    addEdge2(336, 337);
+    addEdge2(337, 338);
+    addEdge2(338, 355);
+    addEdge2(355, 340);
+    addEdge2(340, 342);
 
-    addEdge(18, 11);
-    addEdge(18, 14);
+    addEdge2(336, 352);
+    addEdge2(338, 353);
+    addEdge2(353, 354);
+    addEdge2(355, 356);
+    addEdge2(342, 357);
+    addEdge2(349, 351);
+    addEdge2(352, 354);
+    addEdge2(354, 356);
+    addEdge2(356, 357);
+    addEdge2(351, 357);
 
-    addEdge(19, 47);
-    addEdge(19, 20);
+    addEdge2(362, 364);
+    addEdge2(363, 365);
+    addEdge2(364, 365);
+    addEdge2(364, 361);
+    addEdge2(361, 392);
+    addEdge2(392, 360);
+    addEdge2(361, 359);
+    addEdge2(359, 391);
+    addEdge2(358, 391);
+    addEdge2(351, 358);
 
-    addEdge(20, 19);
-    addEdge(20, 21);
-    addEdge(20, 27);
+    addEdge2(358, 445);
+    addEdge2(445, 383);
+    addEdge2(383, 384);
+    addEdge2(384, 442);
+    addEdge2(444, 445);
+    addEdge2(443, 444);
 
-    addEdge(21, 20);
-    addEdge(21, 26);
-    addEdge(21, 22);
+    addEdge2(382, 383);
+    addEdge2(381, 382);
+    addEdge2(379, 381);
+    addEdge2(375, 379);
+    addEdge2(373, 375);
+    addEdge2(368, 373);
+    addEdge2(368, 370);
+    addEdge2(369, 370);
+    addEdge2(366, 369);
+    addEdge2(365, 366);
 
-    addEdge(22, 21);
-    addEdge(22, 25);
-    addEdge(22, 23);
+    addEdge2(386, 468);
+    addEdge2(467, 468);
+    addEdge2(389, 467);
+    addEdge2(389, 390);
+    addEdge2(390, 367);
+    addEdge2(367, 387);
+    addEdge2(388, 389);
+    addEdge2(366, 388);
 
-    addEdge(23, 22);
-    addEdge(23, 24);
+    addEdge2(367, 371);
+    addEdge2(371, 372);
+    addEdge2(368, 372);
+    addEdge2(372, 374);
+    addEdge2(374, 376);
+    addEdge2(371, 377);
+    addEdge2(376, 377);
+    addEdge2(376, 378);
+    addEdge2(375, 378);
 
-    addEdge(24, 23);
-    addEdge(24, 25);
+    addEdge2(378, 380);
+    addEdge2(379, 380);
+    addEdge2(380, 385);
+    addEdge2(377, 440);
+    addEdge2(440, 441);
 
-    addEdge(25, 24);
-    addEdge(25, 22);
+    addEdge2(11, 18);
+    addEdge2(18, 14);
+    addEdge2(14, 446);
+    addEdge2(13, 387);
+    addEdge2(13, 394);
+    addEdge2(10, 394);
 
-    addEdge(26, 21);
+    addEdge2(10, 393);
+    addEdge2(9, 393);
+    addEdge2(393, 465);
+    addEdge2(464, 465);
+    addEdge2(394, 464);
 
-    addEdge(27, 20);
-    addEdge(27, 28);
+    addEdge2(9, 462);
+    addEdge2(15, 462);
+    addEdge2(13, 315);
+    addEdge2(315, 439);
+    addEdge2(314, 439);
+    addEdge2(15, 314);
 
-    addEdge(28, 27);
-    addEdge(28, 29);
-    addEdge(28, 30);
+    addEdge2(15, 461);
+    addEdge2(460, 461);
+    addEdge2(459, 460);
+    addEdge2(458, 459);
+    addEdge2(458, 463);
+    addEdge2(8, 463);
+    addEdge2(8, 401);
+    addEdge2(316, 401);
+    addEdge2(316, 437);
 
-    addEdge(29, 28);
-    addEdge(29, 31);
+    addEdge2(316, 317);
+    addEdge2(317, 400);
+    addEdge2(399, 400);
+    addEdge2(400, 401);
+    addEdge2(400, 402);
+    addEdge2(400, 404);
+    addEdge2(402, 403);
+    addEdge2(403, 438);
+    addEdge2(404, 405);
+    addEdge2(399, 405);
+    addEdge2(405, 406);
+    addEdge2(406, 407);
+    addEdge2(404, 407);
+    addEdge2(406, 408);
 
-    addEdge(30, 28)
-    addEdge(30, 11);
+    addEdge2(398, 399);
+    addEdge2(397, 398);
+    addEdge2(396, 397);
+    addEdge2(395, 396);
+    addEdge2(397, 424);
+    addEdge2(424, 425);
+    addEdge2(395, 425);
 
-    
+    addEdge2(437, 415);
+    addEdge2(437, 414);
+    addEdge2(414, 415);
+    addEdge2(413, 414);
+    addEdge2(413, 313);
+    addEdge2(312, 313);
+    addEdge2(312, 415);
+    addEdge2(7, 312);
+    addEdge2(7, 313);
+    addEdge2(266, 313);
+    addEdge2(6, 266);
+    addEdge2(412, 413);
+    addEdge2(411, 412);
+    addEdge2(410, 411);
+    addEdge2(409, 410);
+
 
     function toRadians(degrees) {
         return degrees * Math.PI / 180;
@@ -742,7 +1066,7 @@ function approximateDistance(latlng1, latlng2) {
         return a.lat === b.lat && a.lng === b.lng;
     }
 
-    function isOnSegment(mid, a, b){
+    function isOnSegment(mid, a, b){ 
         console.log(mid.toString(), a.toString(), b.toString(), approximateDistance(mid,a) + approximateDistance(mid,b), approximateDistance(a,b))
         if(approximateDistance(mid,a) + approximateDistance(mid,b) - approximateDistance(a,b) < 2)
         {
