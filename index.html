@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Finding Path on Hoang Mai district</title>
+  <title>Finding Path on Yen So</title>
   <style>
     #map {
       height: 100vh;
@@ -18,15 +18,15 @@
   <script>
     function initMap() {
     
-    var hangBo = { lat: 20.95721, lng: 105.86058 };
+    var yenSo = { lat: 20.95721, lng: 105.86058 };
     //20.95721, 105.86058
 
     var map = new google.maps.Map(document.getElementById('map'), {
-      center: hangBo,
+      center: yenSo,
       zoom: 17
     });
 
-var hangBoCoordinates = [
+var yenSoCoordinates = [
   { lat: 20.96572, lng: 105.84192 },
   { lat: 20.96073, lng: 105.84201 },
   { lat: 20.95524, lng: 105.84324 },
@@ -61,8 +61,8 @@ var hangBoCoordinates = [
 ];
 
 //20.965665, 105.848872
-    var hangBoArea = new google.maps.Polygon({
-    paths: hangBoCoordinates,
+    var yenSoArea = new google.maps.Polygon({
+    paths: yenSoCoordinates,
     strokeOpacity: 0,
     fillColor: '#FFE5CC',
     fillOpacity: 0.5,
@@ -76,7 +76,7 @@ var hangBoCoordinates = [
 
 
     var hangBoBorder = new google.maps.Polyline({
-        path: hangBoCoordinates, 
+        path: yenSoCoordinates, 
         strokeColor: '#FF0000',
         strokeOpacity: 0, 
         icons: [{
@@ -607,23 +607,6 @@ new google.maps.LatLng(20.95889, 105.86276),
         adj[intersections[i].toString()] = [];
         isForbid[intersections[i].toString()] = new Set();
     }
-    // adj[intersections[16].toString()].push(intersections[0]);
-    // adj[intersections[15].toString()].push(intersections[14], intersections[10]);
-    // adj[intersections[14].toString()].push(intersections[15], intersections[11], intersections[13]);
-    // adj[intersections[13].toString()].push(intersections[14], intersections[12]);
-    // adj[intersections[12].toString()].push(intersections[13], intersections[11], intersections[7]);
-    // adj[intersections[11].toString()].push(intersections[12], intersections[14], intersections[10], intersections[8]);
-    // adj[intersections[10].toString()].push(intersections[9], intersections[15], intersections[11], intersections[4]);
-    // adj[intersections[9].toString()].push(intersections[10]);
-    // adj[intersections[8].toString()].push(intersections[11], intersections[7], intersections[5]);
-    // adj[intersections[7].toString()].push(intersections[8], intersections[12], intersections[6]);
-    // adj[intersections[6].toString()].push(intersections[0], intersections[5], intersections[7]);
-    // adj[intersections[5].toString()].push(intersections[6], intersections[8], intersections[4], intersections[1]);
-    // adj[intersections[4].toString()].push(intersections[3], intersections[5], intersections[10]);
-    // adj[intersections[3].toString()].push(intersections[4], intersections[2]);
-    // adj[intersections[2].toString()].push(intersections[1], intersections[3]);
-    // adj[intersections[1].toString()].push(intersections[2], intersections[5], intersections[0]);
-    // adj[intersections[0].toString()].push(intersections[1], intersections[6], intersections[16]);
     
     function addEdge(i, j) {
         adj[intersections[i].toString()].push(intersections[j]);
@@ -1365,9 +1348,9 @@ function approximateDistance(latlng1, latlng2) {
                 map:map
             });
     let flag2 = 0;
-    hangBoArea.addListener('click', function(hangBoAreaMouseEvent) {
+    yenSoArea.addListener('click', function(hangBoAreaMouseEvent) {
     var clickedLocation = hangBoAreaMouseEvent.latLng;
-    if (google.maps.geometry.poly.containsLocation(clickedLocation, hangBoArea)) 
+    if (google.maps.geometry.poly.containsLocation(clickedLocation, yenSoArea)) 
     {
         if(X == 1) {
             alert("Đang trong mode cấm đường!");
@@ -1487,7 +1470,7 @@ function approximateDistance(latlng1, latlng2) {
     {
         flag = 0;
         var clickedLocation = mapsMouseEvent.latLng;
-        if (!google.maps.geometry.poly.containsLocation(clickedLocation, hangBoArea)) 
+        if (!google.maps.geometry.poly.containsLocation(clickedLocation, yenSoArea)) 
         {
             markerStart.setPosition(null);
             markerEnd.setPosition(null);
