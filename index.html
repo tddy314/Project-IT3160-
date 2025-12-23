@@ -75,7 +75,7 @@ var yenSoCoordinates = [
     };
 
 
-    var hangBoBorder = new google.maps.Polyline({
+    var yenSoBorder = new google.maps.Polyline({
         path: yenSoCoordinates, 
         strokeColor: '#FF0000',
         strokeOpacity: 0, 
@@ -1348,8 +1348,8 @@ function approximateDistance(latlng1, latlng2) {
                 map:map
             });
     let flag2 = 0;
-    yenSoArea.addListener('click', function(hangBoAreaMouseEvent) {
-    var clickedLocation = hangBoAreaMouseEvent.latLng;
+    yenSoArea.addListener('click', function(yenSoAreaMouseEvent) {
+    var clickedLocation = yenSoAreaMouseEvent.latLng;
     if (google.maps.geometry.poly.containsLocation(clickedLocation, yenSoArea)) 
     {
         if(X == 1) {
