@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yên Sở Pathfinder - OSM</title>
+    <link rel="stylesheet" href="css\style.css">
+</head>
+<body>
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p style="color: #667eea; font-weight: 600;">Đang tải dữ liệu OSM...</p>
+    </div>
+    <div class="easter-egg" id="easterEgg">🚀 TURBO MODE! 🚀</div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Web tìm đường Yên Sở </h1>
+            <p>Bài tập lớn Nhập môn AI nhóm 20</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="sidebar">
+                <!-- Box hướng dẫn -->
+                <div class="step-indicator">
+                    <strong>📍 Bước 1:</strong> Chọn phương tiện<br>
+                    <strong>📍 Bước 2:</strong> Click 2 điểm trên bản đồ<br>
+                    <strong>📍 Bước 3:</strong> Thay đổi mức độ đường đi (nếu cần)<br>
+                    <strong>📍 Bước 4:</strong> Xem đường đi tối ưu<br>
+                </div>
+
+                <div class="control-group">
+                    <label>Phương tiện di chuyển</label>
+                    <div class="mode-buttons">
+                        <button class="mode-btn active" data-mode="car">🚗 Ô tô</button>
+                        <button class="mode-btn" data-mode="motorcycle">🏍️ Xe máy</button>
+                        <button class="mode-btn" data-mode="walking">🚶 Đi bộ</button>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h3>📊 Thông tin hệ thống</h3>
+                    <p>📍 Số nút: <strong id="nodeCount">0</strong></p>
+                    <p>🛤️ Số đường: <strong id="wayCount">0</strong></p>
+                    <p>🎯 Điểm đã chọn: <strong id="selectedCount">0/2</strong></p>
+                </div>
+
+                <div id="resultBox" style="display: none;">
+                    <div class="result-box">
+                        <h3>✅ Đường đi tối ưu</h3>
+                        <p><strong>📏 Quãng đường:</strong> <span id="resultDistance"></span> km</p>
+                        <p><strong>⏱️ Thời gian:</strong> <span id="resultTime"></span> phút</p>
+                        <p><strong>🛣️ Tên đường đi qua:</strong></p>
+                        <div class="street-list" id="streetList"></div>
+                    </div>
+                </div>
+
+                <button class="clear-btn" id="clearBtn">🔄 Xóa và chọn lại</button>
+
+                <div class="legend">
+                    <h4>🎨 Chú thích màu</h4>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #22c55e;"></div>
+                        <span>Thông thoáng</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #eab308;"></div>
+                        <span>Trung bình</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #a855f7;"></div>
+                        <span>Kẹt xe</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ef4444;"></div>
+                        <span>Ngập nước</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #3b82f6;"></div>
+                        <span>Đường đi tối ưu</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; padding: 12px; background: #fef3c7; border-radius: 8px; font-size: 0.8em; color: #78350f;">
+                    💡 <strong>Tip:</strong> Click vào đường để thay đổi tình trạng giao thông!
+                </div>
+            </div>
+            
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="edgeModal">
+        <div class="modal-content">
+            <h2>⚙️ Chỉnh sửa tình trạng đường</h2>
+            <p style="margin-bottom: 20px; color: #6c757d; font-size: 0.95em;">
+                Đường: <strong id="streetName"></strong>
+            </p>
+            
+            <button class="condition-btn" data-condition="clear">
+                <strong style="color: #22c55e;">🟢 Thông thoáng</strong><br>
+                <small style="color: #6c757d;">Không có vấn đề giao thông</small>
+            </button>
+            
+            <button class="condition-btn" data-condition="moderate">
+                <strong style="color: #eab308;">🟡 Trung bình</strong><br>
+                <small style="color: #6c757d;">Có chút kẹt xe nhẹ</small>
+            </button>
+            
+            <button class="condition-btn" data-condition="jam">
+                <strong style="color: #a855f7;">🟣 Kẹt xe</strong><br>
+                <small style="color: #6c757d;">Giao thông đông đúc</small>
+            </button>
+            
+            <button class="condition-btn" data-condition="flooding">
+                <strong style="color: #ef4444;">🔴 Ngập nước</strong><br>
+                <small style="color: #6c757d;">Đường bị ngập, khó đi</small>
+            </button>
+            
+            <button class="modal-btn" id="closeModal">Đóng</button>
+        </div>
+    </div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxDxnAnR4-eE-YaMQJqAdamJZpbMMcVq4&callback=initMap" async defer></script>
+    <script src="js\script.js"></script>
+</body>
+</html>
