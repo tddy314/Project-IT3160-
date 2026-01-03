@@ -4,11 +4,11 @@ let selectedMode = 'car', selectedNodes = [], selectionMarkers = [], currentPath
 const speeds = { car: 40, motorcycle: 45, walking: 5 };
 
 const conditions = {
-    clear: { color: '#b8eadfff', multiplier: 1, traffic: 0.1 },
+    clear: { color: '#aaebbcff', multiplier: 1, traffic: 0.1 },
     moderate: { color: '#eab308', multiplier: 0.7, traffic: 0.4 },
     jam: { color: '#a855f7', multiplier: 0.5, traffic: 0.7 },
     flooding: { color: '#b77878ff', multiplier: 0.3, traffic: 0.9 },
-    ban: {color: '#ff0000ff', multiplier: 0, traffic: 10}
+    ban: {color: '#ff0000ff', multiplier: -1000, traffic: 1000}
 };
 
 const vehicleRestrictions = {
