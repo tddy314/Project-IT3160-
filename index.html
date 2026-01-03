@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yên Sở Pathfinder - OSM</title>
+    <title>Phường Yên Sở</title>
+    <link rel="icon" type="image/png" href="logo-hust.png">
     <link rel="stylesheet" href="css\style.css">
 </head>
 <body>
@@ -11,12 +12,11 @@
         <div class="spinner"></div>
         <p style="color: #667eea; font-weight: 600;">Đang tải dữ liệu OSM...</p>
     </div>
-    <div class="easter-egg" id="easterEgg">🚀 TURBO MODE! 🚀</div>
     
     <div class="container">
         <div class="header">
-            <h1>Web tìm đường Yên Sở </h1>
-            <p>Bài tập lớn Nhập môn AI nhóm 20</p>
+            <h1> Web tìm đường Yên Sở </h1>
+            <p> Bài tập lớn Nhập môn AI nhóm 20</p>
         </div>
         
         <div class="main-content">
@@ -24,8 +24,8 @@
                 <!-- Box hướng dẫn -->
                 <div class="step-indicator">
                     <strong>📍 Bước 1:</strong> Chọn phương tiện<br>
-                    <strong>📍 Bước 2:</strong> Click 2 điểm trên bản đồ<br>
-                    <strong>📍 Bước 3:</strong> Thay đổi mức độ đường đi (nếu cần)<br>
+                    <strong>📍 Bước 2:</strong> Thay đổi mức độ đường đi <br>
+                    <strong>📍 Bước 3:</strong> Click 2 điểm <br>
                     <strong>📍 Bước 4:</strong> Xem đường đi tối ưu<br>
                 </div>
 
@@ -40,8 +40,8 @@
 
                 <div class="info-box">
                     <h3>📊 Thông tin hệ thống</h3>
-                    <p>📍 Số nút: <strong id="nodeCount">0</strong></p>
-                    <p>🛤️ Số đường: <strong id="wayCount">0</strong></p>
+                    <p>📍 Tổng số nút : <strong id="nodeCount">0</strong></p>
+                    <p>🛤️ Tổng số đường : <strong id="wayCount">0</strong></p>
                     <p>🎯 Điểm đã chọn: <strong id="selectedCount">0/2</strong></p>
                 </div>
 
@@ -72,8 +72,12 @@
                         <span>Kẹt xe</span>
                     </div>
                     <div class="legend-item">
-                        <div class="legend-color" style="background: #ef4444;"></div>
+                        <div class="legend-color" style="background:#b77878ff;"></div>
                         <span>Ngập nước</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ff0000ff;"></div>
+                        <span>Đường bị cấm</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-color" style="background: #3b82f6;"></div>
@@ -115,6 +119,11 @@
             <button class="condition-btn" data-condition="flooding">
                 <strong style="color: #ef4444;">🔴 Ngập nước</strong><br>
                 <small style="color: #6c757d;">Đường bị ngập, khó đi</small>
+            </button>
+
+            <button class="condition-btn" data-condition="flooding">
+                <strong style="color: #ff0000ff;">🔴 Đường bị cấm</strong><br>
+                <small style="color: #6c757d;">Đường bị cấm do có sự kiện,...</small>
             </button>
             
             <button class="modal-btn" id="closeModal">Đóng</button>

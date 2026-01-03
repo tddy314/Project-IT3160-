@@ -4,10 +4,11 @@ let selectedMode = 'car', selectedNodes = [], selectionMarkers = [], currentPath
 const speeds = { car: 40, motorcycle: 45, walking: 5 };
 
 const conditions = {
-    clear: { color: '#22c55e', multiplier: 1, traffic: 0.1 },
+    clear: { color: '#b8eadfff', multiplier: 1, traffic: 0.1 },
     moderate: { color: '#eab308', multiplier: 0.7, traffic: 0.4 },
     jam: { color: '#a855f7', multiplier: 0.5, traffic: 0.7 },
-    flooding: { color: '#ef4444', multiplier: 0.3, traffic: 0.9 }
+    flooding: { color: '#b77878ff', multiplier: 0.3, traffic: 0.9 },
+    ban: {color: '#ff0000ff', multiplier: 0, traffic: 10}
 };
 
 const vehicleRestrictions = {
@@ -42,14 +43,12 @@ function loadOSMData() {
         });
 }
 
+// Xử lý data từ file json
 function processOSMData(data) {
-    // Extract all nodes with coordinates
     const nodeElements = data.elements.filter(e => e.type === 'node');
     nodeElements.forEach(node => {
         nodes[node.id] = { id: node.id, lat: node.lat, lon: node.lon };
     });
-    
-    // Extract ways
     const wayElements = data.elements.filter(e => e.type === 'way' && e.tags && e.tags.highway);
     wayElements.forEach(way => {
         if (way.nodes && way.nodes.length >= 2) {
@@ -63,8 +62,6 @@ function processOSMData(data) {
             });
         }
     });
-    
-    // Build edges from ways
     ways.forEach(way => {
         for (let i = 0; i < way.nodes.length - 1; i++) {
             const fromId = way.nodes[i];
@@ -87,7 +84,6 @@ function processOSMData(data) {
     document.getElementById('nodeCount').textContent = Object.keys(nodes).length;
     document.getElementById('wayCount').textContent = ways.length;
     
-    // Fit map to data bounds
     const bounds = new google.maps.LatLngBounds();
     Object.values(nodes).forEach(node => {
         bounds.extend({ lat: node.lat, lng: node.lon });
@@ -95,6 +91,8 @@ function processOSMData(data) {
     map.fitBounds(bounds);
 }
 
+// Hàm tính khoảng cách dựa vào kinh độ và vĩ độ của 2 điểm
+// Mối liên hệ là R (Bán kính trái đất) là 6371 km
 function calculateDistance(lat1, lon1, lat2, lon2) {
     const R = 6371;
     const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -103,12 +101,14 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
+//Hàm tham lam (theo khoảng cách đường chim bay giữa 2 điểm)
 function heuristic(nodeId1, nodeId2) {
     const n1 = nodes[nodeId1];
     const n2 = nodes[nodeId2];
     return calculateDistance(n1.lat, n1.lon, n2.lat, n2.lon);
 }
 
+// Tìm Node gần nhất với location hiện tại
 function findNearestNode(lat, lng) {
     let nearest = null;
     let minDist = Infinity;
@@ -116,18 +116,20 @@ function findNearestNode(lat, lng) {
     Object.values(nodes).forEach(node => {
         const dist = calculateDistance(lat, lng, node.lat, node.lon);
         if (dist < minDist) {
+            // Tìm được điểm có khoảng cách nhỏ hơn thì cập nhật
             minDist = dist;
             nearest = node;
         }
     });
-    
     return nearest;
 }
 
+// Check xem phương tiện có thể đi trên đường này ko
 function canUseRoad(highway, mode) {
     return vehicleRestrictions[mode].includes(highway);
 }
 
+// Xử lý việc Click Map (Chọn 2 điểm)
 function handleMapClick(latLng) {
     if (selectedNodes.length >= 2) return;
     
@@ -138,13 +140,14 @@ function handleMapClick(latLng) {
     selectedNodes.push(nearestNode);
     
     const marker = new google.maps.Marker({
+        // Cài đặt cấu hình cho Node
         position: { lat: nearestNode.lat, lng: nearestNode.lon },
         map: map,
         icon: {
             path: google.maps.SymbolPath.CIRCLE,
             scale: 10,
             fillColor: selectedNodes.length === 1 ? '#10b981' : '#ef4444',
-            fillOpacity: 1,
+            fillOpacity: 4,
             strokeColor: 'white',
             strokeWeight: 3
         },
@@ -157,24 +160,26 @@ function handleMapClick(latLng) {
     if (selectedNodes.length === 2) findPath();
 }
 
+
+// Build map (line đường xanh)
 function renderMap() {
     clearMap();
     
-    // Draw all ways (background roads)
+    // Vẽ tất cả các đường
     ways.forEach(way => {
         const path = [];
         way.nodes.forEach(nodeId => {
             const node = nodes[nodeId];
             if (node) path.push({ lat: node.lat, lng: node.lon });
         });
-        
+        // Nếu đường đi không đủ 2 điểm (đầu, cuối) --> ko thỏa mãn
         if (path.length < 2) return;
         
         const polyline = new google.maps.Polyline({
             path: path,
             strokeColor: conditions[way.condition].color,
-            strokeOpacity: 0.6,
-            strokeWeight: 3,
+            strokeOpacity: 0.5, // Chỉnh độ dày của đường
+            strokeWeight: 3, // Chỉnh độ mờ (nếu trọng số càng lớn thì đường càng mờ) 
             map: map
         });
         
@@ -190,7 +195,7 @@ function renderMap() {
         polylines.push(polyline);
     });
     
-    // Draw the selected path on top (only the specific edges used)
+
     if (currentPath && currentPath.edges) {
         currentPath.edges.forEach(edge => {
             const fromNode = nodes[edge.from];
@@ -225,14 +230,15 @@ function findPath() {
         document.getElementById('resultDistance').textContent = result.distance.toFixed(2);
         document.getElementById('resultTime').textContent = result.time.toFixed(1);
         
-        // Display street names
+        // Biểu diễn các tên đường đã đi qua
+        // streetList là tên Biến biểu thị trong file index.html để add
         const streetList = document.getElementById('streetList');
         streetList.innerHTML = '';
         const uniqueWays = [...new Set(result.ways.map(w => w.name))];
         uniqueWays.forEach(name => {
             const div = document.createElement('div');
             div.className = 'street-item';
-            div.textContent = `🛣️ ${name}`;
+            div.textContent = `${name}`;
             streetList.appendChild(div);
         });
         
@@ -244,6 +250,8 @@ function findPath() {
     }
 }
 
+
+// Thuật toán A* 
 function aStarSearch(startId, goalId) {
     const openSet = new Set([startId]);
     const cameFrom = {};
@@ -342,7 +350,7 @@ document.querySelectorAll('.condition-btn').forEach(btn => {
     btn.addEventListener('click', function() {
         if (selectedWay) {
             selectedWay.condition = this.dataset.condition;
-            // Update all edges that belong to this way
+
             edges.forEach(edge => {
                 if (edge.way.id === selectedWay.id) {
                     edge.condition = this.dataset.condition;
@@ -357,18 +365,4 @@ document.querySelectorAll('.condition-btn').forEach(btn => {
 
 document.getElementById('closeModal').addEventListener('click', () => {
     document.getElementById('edgeModal').classList.remove('show');
-});
-
-// Easter egg
-const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-let konamiIndex = 0;
-document.addEventListener('keydown', (e) => {
-    if (e.key === konamiCode[konamiIndex]) {
-        konamiIndex++;
-        if (konamiIndex === konamiCode.length) {
-            document.getElementById('easterEgg').classList.add('show');
-            setTimeout(() => document.getElementById('easterEgg').classList.remove('show'), 3000);
-            konamiIndex = 0;
-        }
-    } else konamiIndex = 0;
 });

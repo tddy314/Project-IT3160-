@@ -37,7 +37,5 @@ body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, 
 .loading.hide { display: none; }
 .spinner { border: 4px solid #f3f4f6; border-top: 4px solid #667eea; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-.easter-egg { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 4em; z-index: 4000; animation: bounce 1s infinite; display: none; }
 @keyframes bounce { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.2); } }
-.easter-egg.show { display: block; }
 .step-indicator { background: #fff7ed; border-left: 4px solid #f59e0b; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 0.85em; color: #92400e; }
