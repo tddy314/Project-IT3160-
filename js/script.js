@@ -9,7 +9,7 @@ const WEATHER_API_KEY = '22c004762fd3ec96413a3044bce72e2e';
 const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather';
 
 const conditions = {
-    clear: { color: '#22c55e', multiplier: 1, traffic: 0.1 },
+    clear: { color: '#97c6a8ff', multiplier: 1, traffic: 0.1 },
     moderate: { color: '#eab308', multiplier: 0.7, traffic: 0.4 },
     jam: { color: '#a855f7', multiplier: 0.5, traffic: 0.7 },
     flooding: { color: '#ef4444', multiplier: 0.3, traffic: 0.9 }
@@ -159,6 +159,24 @@ function loadOSMData() {
         });
 }
 
+function getWayDirection(way) {
+    if (!way.tags) return 'both';
+
+    // Vòng xuyến luôn 1 chiều
+    if (way.tags.junction === 'roundabout') return 'forward';
+
+    const oneway = way.tags.oneway;
+
+    if (oneway === 'yes' || oneway === 'true' || oneway === '1')
+        return 'forward';
+
+    if (oneway === '-1')
+        return 'backward';
+
+    return 'both'; // Mặc định: 2 chiều
+}
+
+
 // Xử lý data từ file json
 function processOSMData(data) {
     const nodeElements = data.elements.filter(e => e.type === 'node');
@@ -179,23 +197,44 @@ function processOSMData(data) {
         }
     });
     ways.forEach(way => {
-        for (let i = 0; i < way.nodes.length - 1; i++) {
-            const fromId = way.nodes[i];
-            const toId = way.nodes[i + 1];
-            const fromNode = nodes[fromId];
-            const toNode = nodes[toId];
-            
-            if (fromNode && toNode) {
-                edges.push({
-                    from: fromId,
-                    to: toId,
-                    way: way,
-                    distance: calculateDistance(fromNode.lat, fromNode.lon, toNode.lat, toNode.lon),
-                    condition: 'clear'
-                });
-            }
+    const direction = getWayDirection(way);
+
+    for (let i = 0; i < way.nodes.length - 1; i++) {
+        const a = way.nodes[i];
+        const b = way.nodes[i + 1];
+        const nodeA = nodes[a];
+        const nodeB = nodes[b];
+
+        if (!nodeA || !nodeB) continue;
+
+        const dist = calculateDistance(
+            nodeA.lat, nodeA.lon,
+            nodeB.lat, nodeB.lon
+        );
+
+        // Theo chiều node trong way
+        if (direction === 'forward' || direction === 'both') {
+            edges.push({
+                from: a,
+                to: b,
+                way: way,
+                distance: dist,
+                condition: 'clear'
+            });
         }
-    });
+
+        // Ngược chiều node
+        if (direction === 'backward' || direction === 'both') {
+            edges.push({
+                from: b,
+                to: a,
+                way: way,
+                distance: dist,
+                condition: 'clear'
+            });
+        }
+    }
+});
     
     document.getElementById('nodeCount').textContent = Object.keys(nodes).length;
     document.getElementById('wayCount').textContent = ways.length;
@@ -398,19 +437,21 @@ function aStarSearch(startId, goalId) {
         
         openSet.delete(current);
         
-        const neighbors = edges.filter(e => 
-            (e.from == current || e.to == current) && 
+        const neighbors = edges.filter(e =>
+            e.from === current &&
             canUseRoad(e.way.highway, selectedMode)
         );
         
         neighbors.forEach(edge => {
-            const neighbor = edge.from == current ? edge.to : edge.from;
+            const neighbor = edge.to;
+
             const cond = conditions[edge.condition];
-            const effectiveSpeed = speeds[selectedMode] * cond.multiplier * (1 - cond.traffic * 0.5);
+            const effectiveSpeed =
+                speeds[selectedMode] * cond.multiplier * (1 - cond.traffic * 0.5);
+
             const travelTime = (edge.distance / effectiveSpeed) * 60;
-            
             const tentativeG = gScore[current] + travelTime;
-            
+
             if (tentativeG < gScore[neighbor]) {
                 cameFrom[neighbor] = { node: current, edge: edge };
                 gScore[neighbor] = tentativeG;
