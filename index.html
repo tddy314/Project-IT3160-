@@ -37,6 +37,12 @@
                         <button class="mode-btn" data-mode="walking">🚶 Đi bộ</button>
                     </div>
                 </div>
+                <div class="control-group">
+                    <label>🌤️ Thời tiết Yên Sở</label>
+                    <div id="weatherInfo" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 15px; border-radius: 10px; border-left: 4px solid #f59e0b;">
+                        <p style="text-align: center; color: #92400e; font-size: 0.85em;">⏳ Đang tải thời tiết...</p>
+                    </div>
+                </div>
 
                 <div class="info-box">
                     <h3>📊 Thông tin hệ thống</h3>
@@ -72,12 +78,8 @@
                         <span>Kẹt xe</span>
                     </div>
                     <div class="legend-item">
-                        <div class="legend-color" style="background:#b77878ff;"></div>
+                        <div class="legend-color" style="background:rgb(213, 11, 11);"></div>
                         <span>Ngập nước</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: #ff0000ff;"></div>
-                        <span>Đường bị cấm</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-color" style="background: #3b82f6;"></div>
@@ -93,6 +95,7 @@
             <div id="map"></div>
         </div>
     </div>
+    
 
     <div class="modal" id="edgeModal">
         <div class="modal-content">
@@ -117,13 +120,8 @@
             </button>
             
             <button class="condition-btn" data-condition="flooding">
-                <strong style="color: #ef4444;">🔴 Ngập nước</strong><br>
+                <strong style="color: #ff0000;">🔴 Ngập nước</strong><br>
                 <small style="color: #6c757d;">Đường bị ngập, khó đi</small>
-            </button>
-
-            <button class="condition-btn" data-condition="flooding">
-                <strong style="color: #ff0000ff;">🔴 Đường bị cấm</strong><br>
-                <small style="color: #6c757d;">Đường bị cấm do có sự kiện,...</small>
             </button>
             
             <button class="modal-btn" id="closeModal">Đóng</button>

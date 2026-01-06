@@ -1,14 +1,18 @@
 let map, nodes = {}, ways = [], edges = [], polylines = [];
 let selectedMode = 'car', selectedNodes = [], selectionMarkers = [], currentPath = null, selectedWay = null;
+let currentWeather = null; // Lưu thông tin thời tiết
 
 const speeds = { car: 40, motorcycle: 45, walking: 5 };
 
+// API Key của OpenWeatherMap
+const WEATHER_API_KEY = '22c004762fd3ec96413a3044bce72e2e';
+const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather';
+
 const conditions = {
-    clear: { color: '#aaebbcff', multiplier: 1, traffic: 0.1 },
+    clear: { color: '#22c55e', multiplier: 1, traffic: 0.1 },
     moderate: { color: '#eab308', multiplier: 0.7, traffic: 0.4 },
     jam: { color: '#a855f7', multiplier: 0.5, traffic: 0.7 },
-    flooding: { color: '#b77878ff', multiplier: 0.3, traffic: 0.9 },
-    ban: {color: '#ff0000ff', multiplier: -1000, traffic: 1000}
+    flooding: { color: '#ef4444', multiplier: 0.3, traffic: 0.9 }
 };
 
 const vehicleRestrictions = {
@@ -25,9 +29,121 @@ function initMap() {
     });
     
     map.addListener('click', (e) => handleMapClick(e.latLng));
+    
+    // Tải thời tiết trước, sau đó mới tải OSM data
+    fetchWeather();
     loadOSMData();
 }
 
+// Hàm lấy thông tin thời tiết
+async function fetchWeather() {
+    try {
+        const lat = 20.9642; // Vĩ độ Yên Sở
+        const lon = 105.8259; // Kinh độ Yên Sở
+        
+        const response = await fetch(
+            `${WEATHER_API_URL}?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric&lang=vi`
+        );
+        
+        if (!response.ok) {
+            throw new Error('Không thể lấy dữ liệu thời tiết');
+        }
+        
+        const data = await response.json();
+        currentWeather = {
+            temp: Math.round(data.main.temp),
+            description: data.weather[0].description,
+            humidity: data.main.humidity,
+            windSpeed: data.wind.speed,
+            rain: data.rain ? data.rain['1h'] || 0 : 0, // Lượng mưa (mm)
+            icon: data.weather[0].icon
+        };
+        
+        updateWeatherUI();
+        applyWeatherEffects();
+        
+    } catch (error) {
+        console.error('Lỗi thời tiết:', error);
+        document.getElementById('weatherInfo').innerHTML = '⚠️ Không thể tải thời tiết';
+    }
+}
+
+// Cập nhật giao diện hiển thị thời tiết
+function updateWeatherUI() {
+    if (!currentWeather) return;
+    
+    const weatherHTML = `
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+            <img src="https://openweathermap.org/img/wn/${currentWeather.icon}@2x.png" 
+                 style="width: 60px; height: 60px;">
+            <div>
+                <div style="font-size: 1.5em; font-weight: bold; color: #2d3748;">${currentWeather.temp}°C</div>
+                <div style="font-size: 0.9em; text-transform: capitalize; color: #4a5568;">${currentWeather.description}</div>
+            </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85em; color: #4a5568;">
+            <div>💧 Độ ẩm: <strong>${currentWeather.humidity}%</strong></div>
+            <div>💨 Gió: <strong>${currentWeather.windSpeed} m/s</strong></div>
+            ${currentWeather.rain > 0 ? `<div style="grid-column: 1 / -1; color: #ef4444; font-weight: 600;">🌧️ Mưa: ${currentWeather.rain.toFixed(1)} mm/h</div>` : ''}
+        </div>
+        <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #e9ecef; font-size: 0.75em; color: #6c757d; text-align: center;">
+            Cập nhật: ${new Date().toLocaleTimeString('vi-VN')}
+        </div>
+    `;
+    
+    const weatherInfoEl = document.getElementById('weatherInfo');
+    if (weatherInfoEl) {
+        weatherInfoEl.innerHTML = weatherHTML;
+        weatherInfoEl.style.minHeight = 'auto';
+    }
+}
+
+// Áp dụng ảnh hưởng thời tiết lên điều kiện đường
+function applyWeatherEffects() {
+    if (!currentWeather) return;
+    
+    let affectedRoads = 0;
+    
+    // Tự động set condition dựa vào thời tiết
+    ways.forEach(way => {
+        // Chỉ áp dụng cho đường chưa bị set thủ công (hoặc đang là clear)
+        const autoApply = way.condition === 'clear' || !way.manualSet;
+        
+        if (autoApply) {
+            // Nếu mưa to (>5mm/h) → ngập nước
+            if (currentWeather.rain > 5) {
+                way.condition = 'flooding';
+                affectedRoads++;
+            }
+            // Nếu mưa vừa (2-5mm/h) → kẹt xe
+            else if (currentWeather.rain > 2) {
+                way.condition = 'jam';
+                affectedRoads++;
+            }
+            // Nếu mưa nhẹ (0.5-2mm/h) → trung bình
+            else if (currentWeather.rain > 0.5) {
+                way.condition = 'moderate';
+                affectedRoads++;
+            }
+            // Không mưa → thông thoáng
+            else {
+                way.condition = 'clear';
+            }
+        }
+    });
+    
+    if (affectedRoads > 0) {
+        console.log(`⚠️ Thời tiết ảnh hưởng ${affectedRoads} đường`);
+    }
+    
+    renderMap();
+}
+
+// Đánh dấu khi user set thủ công
+function setManualCondition(way, condition) {
+    way.condition = condition;
+    way.manualSet = true; // Đánh dấu đã set thủ công
+}
 function loadOSMData() {
     fetch('pathprj.json')
         .then(response => response.json())
