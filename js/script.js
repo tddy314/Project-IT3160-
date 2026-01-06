@@ -9,7 +9,7 @@ const WEATHER_API_KEY = '22c004762fd3ec96413a3044bce72e2e';
 const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather';
 
 const conditions = {
-    clear: { color: '#97c6a8ff', multiplier: 1, traffic: 0.1 },
+    clear: { color: '#c3d6ca04', multiplier: 1, traffic: 0.1 },
     moderate: { color: '#eab308', multiplier: 0.7, traffic: 0.4 },
     jam: { color: '#a855f7', multiplier: 0.5, traffic: 0.7 },
     flooding: { color: '#ef4444', multiplier: 0.3, traffic: 0.9 }
